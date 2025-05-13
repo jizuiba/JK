@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JK</title>
+    <link rel="shortcut icon" href="assets/logo.ico" type="image/x-icon">
+    <!-- 强制窗口尺寸的关键样式 -->
+    <style>
+        /* 确保应用从一开始就有固定尺寸 */
+        html, body {
+            width: 100vw !important;
+            height: 100vh !important;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        /* 强制所有容器都有固定尺寸 */
+        .app-container, .sidebar, .content, .main-content, .page {
+            box-sizing: border-box;
+        }
+        
+        .app-container {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* 确保侧边栏有固定宽度 */
+        .sidebar {
+            width: 240px !important;
+            flex-shrink: 0;
+        }
+        
+        /* 确保内容区域填充剩余空间 */
+        .content {
+            flex: 1;
+            width: calc(100% - 240px) !important;
+        }
+        
+        /* 加载界面占满整个窗口 */
+        .app-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            background-color: var(--bg-primary, #F4F7FB);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+</head>
+<body>
+    <!-- 自定义窗口标题栏 -->
+    <div class="window-titlebar">
+        <div class="window-title">JK</div>
+        <div class="window-controls">
+            <button id="window-minimize-button" class="window-control-button minimize" data-action="minimize">
+                <i class="ri-subtract-line"></i>
+            </button>
+            <button id="window-close-button" class="window-control-button close" data-action="close">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container">
+        <!-- 左侧菜单栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Logo">
+                <h1>JK</h1>
+            </div>
+            <div class="menu">
+                <div class="menu-item active" data-page="summoner">
+                    <i class="ri-user-3-line"></i>
+                    <span>用户信息</span>
+                </div>
+                <div class="menu-item" data-page="match-history">
+                    <i class="ri-history-line"></i>
+                    <span>历史记录</span>
+                </div>
+                <div class="menu-item" data-page="settings">
+                    <i class="ri-settings-3-line"></i>
+                    <span>设置</span>
+                </div>
+            </div>
+            <div class="connection-status">
+                <div class="status-wrapper">
+                    <div id="status-indicator" class="status-indicator offline"></div>
+                    <span id="status-text">未连接</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧内容区 -->
+        <div class="content">
+            <!-- 顶部导航栏 -->
+            <div class="topbar">
+                <div class="page-title">用户信息</div>
+                <div class="user-info" id="mini-user-info">
+                    <span>请先连接到系统</span>
+                </div>
+            </div>
+
+            <!-- 主要内容区 -->
+            <div class="main-content">
+                <!-- 召唤师信息页面 -->
+                <div class="page active" id="summoner-page">
+                    <!-- 用户信息页面中不需要加载动画，隐藏此元素 -->
+<!--                    <div class="loading-container" id="summoner-loading" style="display: none;">-->
+<!--                        <div class="spinner"></div>-->
+<!--                        <p>加载中...</p>-->
+<!--                    </div>-->
+                    
+                    <div class="page-header">
+                        <h2>基本信息</h2>
+                        <button id="refresh-summoner-btn" class="secondary-btn">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
+                    
+                    <div class="summoner-card" id="summoner-info">
+                        <div class="summoner-header">
+                            <div class="summoner-icon">
+                                <img id="summoner-icon" src="https://ddragon.leagueoflegends.com/cdn/13.10.1/img/profileicon/29.png" alt="用户图标">
+                                <div class="summoner-level" id="summoner-level">0</div>
+                            </div>
+                            <div class="summoner-details">
+                                <div class="summoner-name-line">
+                                    <span id="summoner-name">未知用户</span>
+                                    <span id="summoner-tagline"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summoner-ranks">
+                            <div class="rank-card solo-rank">
+                                <div class="rank-header">
+                                    <h3>单双排位</h3>
+                                </div>
+                                <div class="rank-content">
+                                    <div class="rank-emblem">
+                                        <img id="solo-rank-emblem" src="assets/ranks/UNRANKED.png" alt="段位徽章">
+                                    </div>
+                                    <div class="rank-info">
+                                        <div class="rank-tier" id="solo-rank-tier">未定级</div>
+                                        <div class="rank-lp" id="solo-rank-lp"></div>
+                                        <div class="rank-winrate">
+                                            <span id="solo-rank-wins">0</span>胜 <span id="solo-rank-losses">0</span>负
+                                            <span class="rank-ratio" id="solo-rank-ratio">(0%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rank-card flex-rank">
+                                <div class="rank-header">
+                                    <h3>灵活排位</h3>
+                                </div>
+                                <div class="rank-content">
+                                    <div class="rank-emblem">
+                                        <img id="flex-rank-emblem" src="assets/ranks/UNRANKED.png" alt="段位徽章">
+                                    </div>
+                                    <div class="rank-info">
+                                        <div class="rank-tier" id="flex-rank-tier">未定级</div>
+                                        <div class="rank-lp" id="flex-rank-lp"></div>
+                                        <div class="rank-winrate">
+                                            <span id="flex-rank-wins">0</span>胜 <span id="flex-rank-losses">0</span>负
+                                            <span class="rank-ratio" id="flex-rank-ratio">(0%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rank-card tft-rank">
+                                <div class="rank-header">
+                                    <h3>云顶之弈</h3>
+                                </div>
+                                <div class="rank-content">
+                                    <div class="rank-emblem">
+                                        <img id="tft-rank-emblem" src="assets/ranks/UNRANKED.png" alt="段位徽章">
+                                    </div>
+                                    <div class="rank-info">
+                                        <div class="rank-tier" id="tft-rank-tier">未定级</div>
+                                        <div class="rank-lp" id="tft-rank-lp"></div>
+                                        <div class="rank-winrate">
+                                            <span id="tft-rank-wins">0</span>胜 <span id="tft-rank-losses">0</span>负
+                                            <span class="rank-ratio" id="tft-rank-ratio">(0%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rank-card tft-duo-rank">
+                                <div class="rank-header">
+                                    <h3>云顶双人</h3>
+                                </div>
+                                <div class="rank-content">
+                                    <div class="rank-emblem">
+                                        <img id="tft-duo-rank-emblem" src="assets/ranks/UNRANKED.png" alt="段位徽章">
+                                    </div>
+                                    <div class="rank-info">
+                                        <div class="rank-tier" id="tft-duo-rank-tier">未定级</div>
+                                        <div class="rank-lp" id="tft-duo-rank-lp"></div>
+                                        <div class="rank-winrate">
+                                            <span id="tft-duo-rank-wins">0</span>胜 <span id="tft-duo-rank-losses">0</span>负
+                                            <span class="rank-ratio" id="tft-duo-rank-ratio">(0%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 战绩查询页面 -->
+                <div class="page" id="match-history-page">
+                    <div class="page-header">
+                        <h2>历史记录</h2>
+                        <button id="refresh-matches-btn" class="secondary-btn">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
+                    <div class="loading-container" id="matches-loading">
+                        <div class="spinner"></div>
+                        <p>加载记录中...</p>
+                    </div>
+                    <div class="matches-container" id="matches-container">
+                        <!-- 记录会在这里动态加载 -->
+                    </div>
+                    <!-- 分页控件 -->
+                    <div class="pagination-container" id="pagination-container">
+                        <button class="pagination-btn" id="prev-page-btn" disabled>
+                            <i class="ri-arrow-left-s-line"></i> 上一页
+                        </button>
+                        <div class="pagination-info">
+                            第 <span id="current-page">1</span> 页
+                        </div>
+                        <button class="pagination-btn" id="next-page-btn">
+                            下一页 <i class="ri-arrow-right-s-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 设置页面 -->
+                <div class="page" id="settings-page">
+                    <div class="page-header">
+                        <h2>设置</h2>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h2>应用设置</h2>
+                        <div class="setting-item">
+                            <span>自动检查连接</span>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-check-connection" checked disabled>
+                                <span class="slider round"></span>
+                            </label>
+                            <small>应用始终会自动检查和尝试连接</small>
+                        </div>
+                        <div class="setting-item">
+                            <span>深色模式</span>
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-switch">
+                                <span class="slider round"></span>
+                            </label>
+                            <small>切换亮色/深色主题</small>
+                        </div>
+                    </div>
+                    
+                    <div class="about-card">
+                        <h2>关于应用</h2>
+                        <p>版本: 1.0.0</p>
+                        <p>开发者: @Jizuiba</p>
+                        <p>基于LeagueClient API的客户端工具，帮助玩家查看游戏数据。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 玩家信息卡片浮层 -->
+    <div class="player-card-overlay" id="player-card-overlay">
+        <div class="player-card">
+            <div class="player-card-header">
+                <h3>玩家信息</h3>
+                <button id="close-player-card" class="close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="player-card-content" id="player-card-content">
+                <!-- 动态内容将在这里加载 -->
+                <div class="loading-container" style="height: 150px;">
+                    <div class="spinner"></div>
+                    <p>加载中...</p>
+                </div>
+            </div>
+            <div class="player-card-footer">
+                <button id="view-full-player-history" class="secondary-btn view-full-btn">
+                    查看完整战绩 <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 应用加载屏幕 -->
+    <div class="app-loading" id="app-loading">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Logo" width="60" height="60">
+            <h1>加载中...</h1>
+        </div>
+        <div class="spinner"></div>
+        <p>正在初始化应用</p>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

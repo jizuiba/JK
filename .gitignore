@@ -1,0 +1,95 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+dist_python/
+dist_new/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+__pypackages__/
+venv/
+virtualenv/
+ENV/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+.node_repl_history
+package-lock.json
+
+# Electron
+dist/
+out/
+release/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 日志文件
+*.log
+logs/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+.venv
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# 数据文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 其他
+.coverage
+htmlcov/
+.pytest_cache/
+coverage/ 

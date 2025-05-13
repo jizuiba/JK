@@ -1,0 +1,71 @@
+{
+  "name": "jk-app",
+  "version": "1.0.0",
+  "description": "JK",
+  "main": "electron.js",
+  "scripts": {
+    "start": "node_modules\\.bin\\electron .",
+    "dev": "python main.py",
+    "build": "electron-builder --win",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "League of Legends",
+    "LOL",
+    "Summoner",
+    "Match History"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-is-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-builder": "^24.4.0"
+  },
+  "build": {
+    "appId": "com.jk.app",
+    "productName": "JK",
+    "directories": {
+      "output": "dist_new"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "web/assets/logo.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "web/assets/logo.ico",
+      "uninstallerIcon": "web/assets/logo.ico",
+      "installerHeaderIcon": "web/assets/logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "JK"
+    },
+    "extraResources": [
+      {
+        "from": "dist_python",
+        "to": "dist_python",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "web",
+        "to": "app/web",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+} 
