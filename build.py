@@ -10,9 +10,8 @@ import shutil
 import subprocess
 import platform
 import argparse
-import glob
 import logging
-from typing import Optional, List, Dict, Tuple, Union
+from typing import Optional
 
 # 配置日志
 logging.basicConfig(
@@ -36,19 +35,6 @@ IS_LINUX = SYSTEM == 'linux'
 # NVM相关路径配置
 DEFAULT_NVM_PATHS = [
     r'E:\softwares\nvm\v19.8.0',  # 用户指定的NVM路径
-]
-
-# Windows NVM可能的安装位置
-WINDOWS_NVM_LOCATIONS = [
-    # 常见的驱动器
-    drive + path for drive in ['C:', 'D:', 'E:', 'F:'] for path in [
-        '\\nvm',
-        '\\softwares\\nvm', 
-        '\\software\\nvm',
-        '\\programs\\nvm',
-        '\\program files\\nvm',
-        '\\tools\\nvm'
-    ]
 ]
 
 class Builder:
@@ -387,54 +373,6 @@ class Builder:
             if npm_path:
                 logger.info(f"在自定义NVM路径找到npm: {npm_path}")
                 return npm_path
-        
-        # 在Windows上查找npm的常见位置
-        if IS_WIN:
-            # 程序文件目录中的Node.js
-            program_files = [
-                os.environ.get('ProgramFiles', 'C:\\Program Files'),
-                os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
-            ]
-            
-            # 检查程序文件目录
-            for pf in program_files:
-                for pattern in ['nodejs*', 'Node.js*']:
-                    for node_dir in glob.glob(os.path.join(pf, pattern)):
-                        npm_path = self._check_npm_in_dir(node_dir)
-                        if npm_path:
-                            return npm_path
-            
-            # 用户目录中的nvm安装
-            appdata = os.environ.get('APPDATA', '')
-            if appdata:
-                for nvm_dir in glob.glob(os.path.join(appdata, 'nvm', 'v*')):
-                    npm_path = self._check_npm_in_dir(nvm_dir)
-                    if npm_path:
-                        return npm_path
-            
-            # 检查其他可能的NVM安装位置
-            for nvm_base in WINDOWS_NVM_LOCATIONS:
-                if os.path.exists(nvm_base):
-                    # 查找所有版本目录
-                    for version_dir in glob.glob(os.path.join(nvm_base, 'v*')):
-                        npm_path = self._check_npm_in_dir(version_dir)
-                        if npm_path:
-                            return npm_path
-        
-        # 在Mac/Linux上查找npm的常见位置
-        else:
-            potential_paths = [
-                '/usr/local/bin/npm',
-                '/usr/bin/npm',
-                os.path.expanduser('~/.nvm/versions/node/*/bin/npm')
-            ]
-            
-            for path_pattern in potential_paths:
-                for npm_path in glob.glob(path_pattern):
-                    if os.path.exists(npm_path) and os.access(npm_path, os.X_OK):
-                        logger.info(f"在 {npm_path} 找到npm")
-                        return npm_path
-        
         # 没有找到npm
         return None
     
@@ -470,6 +408,7 @@ class Builder:
             npm_path: npm的路径
         """
         if not npm_path or npm_path == 'npm':
+            logger.info("使用系统npm，无需设置环境变量")
             return  # 使用系统npm，无需设置环境变量
         
         # 获取npm所在的目录

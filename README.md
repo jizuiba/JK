@@ -50,15 +50,26 @@ python main.py
 npm start
 ```
 
-### 构建生产版本
+### 构建
 
 使用以下命令构建Windows可执行文件：
 
 ```bash
 npm run build
 ```
-
+可用参数：
+- `--npm-path`：指定npm路径，一般来说指定npm路径就行了。可选指定`--node-path`来指定Node.js路径。
+- `--electron-only`：仅构建Electron应用
+- `--python-only`：仅构建Python应用
 生成的安装包将位于`dist_new`目录下。
+
+**注意事项**
+- 使用NVM管理的Node.js版本可能会出现找不到npm的情况。
+- 我们可以选择指定npm路径，例如：
+```bash
+python build.py --npm-path "E:\softwares\nvm\v19.8.0\npm.cmd"
+```
+不在命令中指定，也可以在build.py中的DEFAULT_NVM_PATHS中添加NVM的默认路径。
 
 ## 项目结构
 
