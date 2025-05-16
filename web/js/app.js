@@ -32,10 +32,10 @@ const STRINGS = {
 
 // 图片基础URL
 const IMAGE_URLS = {
-    CHAMPION_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/',
-    SPELL_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.9.1/img/spell/',
-    ITEM_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.9.1/img/item/',
-    PROFILE_ICON_BASE: 'https://ddragon.leagueoflegends.com/cdn/15.9.1/img/profileicon/'
+    CHAMPION_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.10.1/img/champion/',
+    SPELL_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.10.1/img/spell/',
+    ITEM_BASE: 'http://ddragon.leagueoflegends.com/cdn/15.10.1/img/item/',
+    PROFILE_ICON_BASE: 'https://ddragon.leagueoflegends.com/cdn/15.10.1/img/profileicon/'
 };
 
 // 防抖动函数
@@ -1079,7 +1079,8 @@ function getGameMode(queueId) {
         700: '冠军杯赛',
         900: '无限火力',
         1400: '终极魔典',
-        1700: '斗魂竞技场'
+        1700: '斗魂竞技场',
+        2300: '神木之门'
     };
 
     return modes[queueId] || '其他模式';
