@@ -1604,32 +1604,33 @@ body.dark-mode .app-loading {
     background-color: var(--bg-secondary);
 }
 
-.horse-rank-Workhorse, .horse-rank-niu-ma {
+/* 旧的牛马等级样式 */
+.horse-rank-Workhorse, .horse-rank-niu-ma, .horse-rank-F {
     color: #888;
     background-color: rgba(136, 136, 136, 0.1);
 }
 
-.horse-rank-InferiorHorse, .horse-rank-xia-deng-ma {
+.horse-rank-InferiorHorse, .horse-rank-xia-deng-ma, .horse-rank-E {
     color: #5c940d;
     background-color: rgba(92, 148, 13, 0.1);
 }
 
-.horse-rank-AverageHorse, .horse-rank-zhong-deng-ma {
+.horse-rank-AverageHorse, .horse-rank-zhong-deng-ma, .horse-rank-D, .horse-rank-C {
     color: #1971c2;
     background-color: rgba(25, 113, 194, 0.1);
 }
 
-.horse-rank-EliteHorse, .horse-rank-shang-deng-ma {
+.horse-rank-EliteHorse, .horse-rank-shang-deng-ma, .horse-rank-B {
     color: #5f3dc4;
     background-color: rgba(95, 61, 196, 0.1);
 }
 
-.horse-rank-JuniorGeneration, .horse-rank-xiao-dai {
+.horse-rank-JuniorGeneration, .horse-rank-xiao-dai, .horse-rank-A {
     color: #e67700;
     background-color: rgba(230, 119, 0, 0.1);
 }
 
-.horse-rank-Heaven-ConnectedGeneration, .horse-rank-tong-tian-dai {
+.horse-rank-Heaven-ConnectedGeneration, .horse-rank-tong-tian-dai, .horse-rank-S {
     color: #c92a2a;
     background-color: rgba(201, 42, 42, 0.1);
 }
